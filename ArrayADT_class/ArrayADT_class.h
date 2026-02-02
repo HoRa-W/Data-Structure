@@ -34,6 +34,10 @@ public:
 	void MissingNumbers();
 	T maxOfADT();
 	void FindMissingUsingHashing();
+	void FindDuplicate();
+	void FindTimeDuplicate();
+	void FindDuplicateUsingHashing();
+	void FindDuplicate_NoSorted();
 };
 
 //These method under here is Private
@@ -197,7 +201,7 @@ void Array<T>::MissingNumbers()
 }
 
 template <class T>
-inline T Array<T>::maxOfADT()
+T Array<T>::maxOfADT()
 {
 	try{
 		int i;
@@ -229,4 +233,86 @@ void Array<T>::FindMissingUsingHashing()
 			cout <<i <<" ";
 	}
 	cout <<"\n";
+}
+
+template <class T>
+void Array<T>::FindDuplicate()
+{
+	//Thuat toan nay can phai sap xep truoc tien
+	//Do phuc tap thuat toan ghi cac so bi lap nay la O(n)
+	//Khi nao gap so lap lastDup se ghi lai so day
+	//Neu gap lai lan 3 thi tranh tinh trang do se co dong lenh continue
+	//i cu tiep tuc duoc cong len
+	T lastDuplicate = 0;
+	int i;
+	for (i = 0; i < lenght; ++i)
+	{
+		if (lastDuplicate == A[i])
+			continue;
+		if (A[i] == A[i + 1])
+			cout << A[i] <<" ";
+			lastDuplicate = A[i];
+	}
+	cout << "\n";
+}
+
+template <class T>
+void Array<T>::FindTimeDuplicate()
+{
+	//Day la thuat toan dem so lan lap cua 1 day Array co sort tang dan
+	//Giai thich: Thuat toan su dung 2 bien i va j trong do j xuat hien khi 
+	//i va so tiep theo lap lai, tu do j duoc cong len dan dan
+	//Khi nao A[j] khac so phia truoc thi i se nhay len j - 1 buoc
+	// => Do phuc tap thuat toan la O(n)
+	int i, j;
+	for (i = 0; i < lenght - 1; ++i)
+	{
+		if (A[i] == A[i + 1])
+		{
+			j = i + 1;
+			while(A[i] == A[j]) j++;
+			
+			cout << "Number "<<A[i] <<" duplicate "<<j - i <<" times\n";
+			i = j - 1;
+		}
+	}
+}
+
+template <class T>
+void Array<T>::FindDuplicateUsingHashing()
+{
+	//Cai nay chi dung cho cac day ADT co sorted
+	T max = maxOfADT();
+	int i;
+	T* arraySub = new T[max];
+	for (i = 0; i < lenght; ++i)
+		arraySub[A[i]]++;
+	
+	for (i = 0; i < max; ++i)
+	{
+		if (arraySub[i] > 1)
+			cout << i <<" lap " <<arraySub[i]<<"\n";
+	}
+	cout <<"\n";
+}
+
+template <class T>
+void Array<T>::FindDuplicate_NoSorted()
+{
+	int i, j;
+	for (i = 0; i < lenght - 1; ++i)
+	{
+		int count = 1;
+		if (A[i] != -1)
+		{
+			for (j = i + 1; j < lenght; ++j)
+				if (A[i] == A[j])
+				{
+					count++;
+					A[j] = -1;
+				}
+			if (count > 1)
+				cout << "So " << A[i] <<" lap lai "<<count<<" lan\n";
+		}
+	}
 }
