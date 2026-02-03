@@ -10,21 +10,21 @@ class Array {
 private:
 	T* A;
 	int size;
-	int lenght;
-	
-	void swap(T &A, T &B);
+	int length;
+
+	void swap(T& A, T& B);
 public:
 	Array()
 	{
 		A = nullptr;
 		size = 0;
-		lenght = 0;
+		length = 0;
 	}
 
 	void Add();
 	bool checkError();
 	void createArray();
-	void addSimple(T* B, int sizeB, int lenghtB);
+	void addSimple(T* B, int sizeB, int lengthB);
 	void printArray();
 	void insertNumber(T);
 	void insertInto(T, int);
@@ -38,6 +38,9 @@ public:
 	void FindTimeDuplicate();
 	void FindDuplicateUsingHashing();
 	void FindDuplicate_NoSorted();
+	void FindPairUsingHashing(T k);
+	void FindPairUsignIandJ(T k);
+	void FindMaxAndMinInSingle();
 };
 
 //These method under here is Private
@@ -55,7 +58,7 @@ void Array<T>::Add()
 {
 	int i;
 	int write;
-	for (i = 0; i < lenght; ++i)
+	for (i = 0; i < length; ++i)
 	{
 		cout << "Nhap so thu: " << i + 1 << ": "; cin >> write;
 		A[i] = write;
@@ -65,13 +68,13 @@ void Array<T>::Add()
 template<class T>
 bool Array<T>::checkError()
 {
-	if (size <= 0 || lenght <= 0)
+	if (size <= 0 || length <= 0)
 	{
 		cout << "Loi nhap do dai so";
 		return true;
 	}
 
-	if (lenght > size) return true;
+	if (length > size) return true;
 
 	return false;
 }
@@ -80,19 +83,19 @@ template<class T>
 void Array<T>::createArray()
 {
 	cout << "Nhap size cho ADT: "; cin >> size;
-	cout << "Nhap lenght cho ADT: "; cin >> lenght;
+	cout << "Nhap length cho ADT: "; cin >> length;
 	A = new T[size];
 	Add();
 }
 
 template<class T>
-void Array<T>::addSimple(T* B, int sizeB, int lenghtB)
+void Array<T>::addSimple(T* B, int sizeB, int lengthB)
 {
 	int i;
 	this->size = sizeB;
-	this->lenght = lenghtB;
+	this->length = lengthB;
 	A = new T[size];
-	for (i = 0; i < lenghtB; ++i)
+	for (i = 0; i < lengthB; ++i)
 	{
 		A[i] = B[i];
 	}
@@ -103,7 +106,7 @@ void Array<T>::printArray()
 {
 	int i;
 	if (checkError()) return;
-	for (i = 0; i < lenght; ++i)
+	for (i = 0; i < length; ++i)
 	{
 		cout << "So thu " << i + 1 << ": " << A[i] << "\n";
 	}
@@ -115,7 +118,7 @@ void Array<T>::insertNumber(T X)
 	int i;
 	if (checkError()) return;
 	else
-		A[lenght++] = X;
+		A[length++] = X;
 }
 
 template<class T>
@@ -124,10 +127,10 @@ void Array<T>::insertInto(T X, int location)
 	int i;
 	if (checkError()) return;
 
-	for (i = lenght - 1; i >= location; --i)
+	for (i = length - 1; i >= location; --i)
 		A[i + 1] = A[i];
 	A[location] = X;
-	lenght++;
+	length++;
 }
 
 template<class T>
@@ -136,9 +139,9 @@ void Array<T>::deleteLocation(int location)
 	int i;
 	if (checkError()) return;
 
-	for (i = location; i < lenght; ++i)
+	for (i = location; i < length; ++i)
 		A[i] = A[i + 1];
-	lenght--;
+	length--;
 }
 
 template<class T>
@@ -148,7 +151,7 @@ void Array<T>::deleteNumber(T number)
 	if (checkError()) return;
 	else
 
-		for (i = 0; i < lenght; ++i)
+		for (i = 0; i < length; ++i)
 
 			if (A[i] == number)
 
@@ -165,8 +168,8 @@ void Array<T>::sorted(bool reverse)
 	{
 		if (!reverse)
 
-			for (i = 0; i < lenght; ++i)
-				for (j = i + 1; j < lenght; ++j)
+			for (i = 0; i < length; ++i)
+				for (j = i + 1; j < length; ++j)
 				{
 					if (A[i] > A[j])
 						swap(A[i], A[j]);
@@ -174,8 +177,8 @@ void Array<T>::sorted(bool reverse)
 
 		else
 
-			for (i = 0; i < lenght; ++i)
-				for (j = i + 1; j < lenght; ++j)
+			for (i = 0; i < length; ++i)
+				for (j = i + 1; j < length; ++j)
 					if (A[i] < A[j])
 						swap(A[i], A[j]);
 	}
@@ -186,7 +189,7 @@ void Array<T>::MissingNumbers()
 {
 	T diff = A[0];
 	int i;
-	for (i = 0; i < lenght; ++i)
+	for (i = 0; i < length; ++i)
 	{
 		if (i + diff != A[i])
 		{
@@ -203,17 +206,18 @@ void Array<T>::MissingNumbers()
 template <class T>
 T Array<T>::maxOfADT()
 {
-	try{
+	try {
 		int i;
-	T max = 0.0;
-	for (i = 0; i < lenght; ++i)
-	{
-		if (A[i] > max)
-			max = A[i];
+		T max = 0.0;
+		for (i = 0; i < length; ++i)
+		{
+			if (A[i] > max)
+				max = A[i];
+		}
+		return max;
 	}
-	return max;
-	}catch (const __EXCEPTION__ e){
-		cerr << "Error: " << e <<"\n";
+	catch (const std::exception &e) {
+		cerr << "Error: " << e.what() << "\n";
 		return 0;
 	}
 }
@@ -224,15 +228,15 @@ void Array<T>::FindMissingUsingHashing()
 	T max = maxOfADT();
 	int i;
 	T* arraySub = new T[max];
-	for (i = 0; i < lenght; ++i)
+	for (i = 0; i < length; ++i)
 		arraySub[A[i]]++;
-	
+
 	for (i = 0; i < max; ++i)
 	{
 		if (arraySub[i] == 0)
-			cout <<i <<" ";
+			cout << i << " ";
 	}
-	cout <<"\n";
+	cout << "\n";
 }
 
 template <class T>
@@ -245,13 +249,13 @@ void Array<T>::FindDuplicate()
 	//i cu tiep tuc duoc cong len
 	T lastDuplicate = 0;
 	int i;
-	for (i = 0; i < lenght; ++i)
+	for (i = 0; i < length; ++i)
 	{
 		if (lastDuplicate == A[i])
 			continue;
 		if (A[i] == A[i + 1])
-			cout << A[i] <<" ";
-			lastDuplicate = A[i];
+			cout << A[i] << " ";
+		lastDuplicate = A[i];
 	}
 	cout << "\n";
 }
@@ -265,14 +269,14 @@ void Array<T>::FindTimeDuplicate()
 	//Khi nao A[j] khac so phia truoc thi i se nhay len j - 1 buoc
 	// => Do phuc tap thuat toan la O(n)
 	int i, j;
-	for (i = 0; i < lenght - 1; ++i)
+	for (i = 0; i < length - 1; ++i)
 	{
 		if (A[i] == A[i + 1])
 		{
 			j = i + 1;
-			while(A[i] == A[j]) j++;
-			
-			cout << "Number "<<A[i] <<" duplicate "<<j - i <<" times\n";
+			while (A[i] == A[j]) j++;
+
+			cout << "Number " << A[i] << " duplicate " << j - i << " times\n";
 			i = j - 1;
 		}
 	}
@@ -281,38 +285,102 @@ void Array<T>::FindTimeDuplicate()
 template <class T>
 void Array<T>::FindDuplicateUsingHashing()
 {
-	//Cai nay chi dung cho cac day ADT co sorted
-	T max = maxOfADT();
+	cout << "\n";
+	T max = maxOfADT(); //Tim con so lon nhat
 	int i;
-	T* arraySub = new T[max];
-	for (i = 0; i < lenght; ++i)
-		arraySub[A[i]]++;
-	
+	max++;
+	T* arraySub = new T[max] {0}; //Khoi tao ham
+
+	for (i = 0; i < length; ++i)
+		arraySub[A[i]]++; //Hashing
+
 	for (i = 0; i < max; ++i)
 	{
 		if (arraySub[i] > 1)
-			cout << i <<" lap " <<arraySub[i]<<"\n";
+			cout << i << " Loop: " << arraySub[i] << "\n";
 	}
-	cout <<"\n";
+	cout << "\n";
 }
 
 template <class T>
 void Array<T>::FindDuplicate_NoSorted()
 {
 	int i, j;
-	for (i = 0; i < lenght - 1; ++i)
+	for (i = 0; i < length - 1; ++i)
 	{
 		int count = 1;
 		if (A[i] != -1)
 		{
-			for (j = i + 1; j < lenght; ++j)
+			for (j = i + 1; j < length; ++j)
 				if (A[i] == A[j])
 				{
 					count++;
 					A[j] = -1;
 				}
 			if (count > 1)
-				cout << "So " << A[i] <<" lap lai "<<count<<" lan\n";
+				cout << "So " << A[i] << " lap lai " << count << " lan\n";
 		}
 	}
+}
+
+template <class T>
+void Array<T>::FindPairUsingHashing(T k)
+{
+	T max = maxOfADT();
+	max++;
+	int i;
+	T* arraySub = new T[(k > max) ? (k + 1) : max]{ 0 };
+
+	//{ 4, 1, 21, 3, 12, 13, 21, 20, 3, 3 };
+	for (i = 0; i < length; ++i)
+	{
+		if (arraySub[k - A[i]] != 0 && A[i] > 0)
+			cout << A[i] << " + " << k - A[i] << " = "<<k<<"\n";
+		
+		arraySub[A[i]]++;
+	}
+}
+
+template<class T>
+void Array<T>::FindPairUsignIandJ(T k)
+{
+	//Y tuong bay nay la danh cho bai toan duoc sap xep san
+	//Dat i vao bien dau tien va j la bien cuoi cung
+	//Neu A[i] + A[j] vi du 1 + 14 ma > 10 thi j buoc phai giam
+	//Neu A[i] + A[j] vi du 1 + 8 ma < 10 thi i buoc phai tang
+	//Neu A[i] + A[j] vi du 1 + 9 ma = 10 thi in ra ket qua va i tien them 1 buoc va j giam 1 buoc
+	int i, j;
+
+	for (i = 0, j = length - 1; i <= j;)
+	{
+		if (A[i] + A[j] > k)
+		{
+			j--;
+		}
+		else if (A[i] + A[j] < k)
+		{
+			i++;
+		}
+		else
+		{
+			cout << A[i] << " + " << A[j] << " = " << k << "\n";
+			i++; j--;
+		}
+	}
+}
+
+template<class T>
+void Array<T>::FindMaxAndMinInSingle()
+{
+	int min = A[0];
+	int max = A[0];
+
+	int i;
+	for (i = 1; i < length; ++i)
+	{
+		if (A[i] < min) min = A[i];
+		else if (A[i] > max) max = A[i];
+	}
+	cout << "Min: " << min << "\nMax: " << max << "\n";
+
 }
